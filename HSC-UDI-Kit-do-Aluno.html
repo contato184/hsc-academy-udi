@@ -38,14 +38,52 @@ header p{margin:0;color:#D6DCFF;max-width:62ch}
   <p>Materiais de apoio para consulta durante e depois do curso. Clique para baixar cada um.</p>
 </header>
 <div class="grid">
-  <div class="card"><span class="tag">PDF</span><h2>Guia de bolso UDI</h2><p>Resumo do curso em três páginas: conceitos, prazos da Anvisa, leitura do código, comparação Brasil, EUA e UE e glossário.</p><a class="btn" href="Guia_de_Bolso_UDI_HSC.pdf" target="_blank" rel="noopener">Abrir o guia</a></div>
-  <div class="card"><span class="tag">EXCEL</span><h2>Planilha de mapeamento UDI</h2><p>Inventário de produtos, prazos por classe, dado mestre para SIUD, GUDID e EUDAMED e plano de ação.</p><a class="btn" href="Planilha_Mapeamento_UDI_HSC.xlsx" download>Baixar a planilha</a></div>
-  <div class="card"><span class="tag">WORD</span><h2>Checklist de rotulagem UDI</h2><p>Itens para conferir no rótulo antes de liberar a arte: identificação, conteúdo do código, apresentação e dados nas bases.</p><a class="btn" href="Checklist_Rotulagem_UDI_HSC.docx" download>Baixar o checklist</a></div>
-  <div class="card"><span class="tag">WORD</span><h2>Modelo de procedimento UDI</h2><p>Estrutura de procedimento de UDI no sistema de gestão da qualidade, para estudo dos requisitos.</p><a class="btn" href="Modelo_Procedimento_UDI_SGQ_HSC.docx" download>Baixar o modelo</a></div>
+  <div class="card"><span class="tag">PDF</span><h2>Guia de bolso UDI</h2><p>Resumo do curso em três páginas: conceitos, prazos da Anvisa, leitura do código, comparação Brasil, EUA e UE e glossário.</p><a class="btn" href="#" data-file="Guia_de_Bolso_UDI_HSC.pdf">Baixar o guia</a></div>
+  <div class="card"><span class="tag">EXCEL</span><h2>Planilha de mapeamento UDI</h2><p>Inventário de produtos, prazos por classe, dado mestre para SIUD, GUDID e EUDAMED e plano de ação.</p><a class="btn" href="#" data-file="Planilha_Mapeamento_UDI_HSC.xlsx">Baixar a planilha</a></div>
+  <div class="card"><span class="tag">WORD</span><h2>Checklist de rotulagem UDI</h2><p>Itens para conferir no rótulo antes de liberar a arte: identificação, conteúdo do código, apresentação e dados nas bases.</p><a class="btn" href="#" data-file="Checklist_Rotulagem_UDI_HSC.docx">Baixar o checklist</a></div>
+  <div class="card"><span class="tag">WORD</span><h2>Modelo de procedimento UDI</h2><p>Estrutura de procedimento de UDI no sistema de gestão da qualidade, para estudo dos requisitos.</p><a class="btn" href="#" data-file="Modelo_Procedimento_UDI_SGQ_HSC.docx">Baixar o modelo</a></div>
 </div>
-<p class="all"><a href="Kit_UDI_HSC_Academy.zip" download>Baixar tudo de uma vez (.zip)</a></p>
+<p class="all"><a href="Kit_UDI_HSC_Academy_1.zip" download="Kit_UDI_HSC_Academy.zip">Baixar tudo de uma vez (.zip)</a></p>
 <p class="note">Material de estudo do curso UDI da HSC Academy. Confirme sempre os prazos e requisitos no texto oficial das normas.</p>
 </div>
+<script>
+// Cada botão extrai o arquivo de dentro do zip do kit (mesmo repositório) e entrega o download.
+(function(){
+  const ZIP = 'Kit_UDI_HSC_Academy_1.zip';
+  const MIME = {pdf:'application/pdf', xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'};
+  let zipBuf = null;
+  async function getZip(){ if(!zipBuf) zipBuf = await (await fetch(ZIP)).arrayBuffer(); return zipBuf; }
+  async function extract(name){
+    const buf = await getZip(), v = new DataView(buf), u8 = new Uint8Array(buf);
+    let e = buf.byteLength - 22; while (e >= 0 && v.getUint32(e, true) !== 0x06054b50) e--;
+    const count = v.getUint16(e + 10, true); let p = v.getUint32(e + 16, true);
+    for (let k = 0; k < count; k++){
+      const method = v.getUint16(p + 10, true), csize = v.getUint32(p + 20, true);
+      const nlen = v.getUint16(p + 28, true), xlen = v.getUint16(p + 30, true), clen = v.getUint16(p + 32, true);
+      const loff = v.getUint32(p + 42, true);
+      const fname = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nlen));
+      if (fname === name){
+        const start = loff + 30 + v.getUint16(loff + 26, true) + v.getUint16(loff + 28, true);
+        const data = u8.slice(start, start + csize);
+        if (method === 0) return data;
+        return new Uint8Array(await new Response(new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+      }
+      p += 46 + nlen + xlen + clen;
+    }
+    throw new Error('não encontrado');
+  }
+  document.querySelectorAll('[data-file]').forEach(a => a.addEventListener('click', async ev => {
+    ev.preventDefault(); const name = a.dataset.file, label = a.textContent; a.textContent = 'Preparando...';
+    try{
+      const bytes = await extract(name);
+      const url = URL.createObjectURL(new Blob([bytes], {type: MIME[name.split('.').pop()] || 'application/octet-stream'}));
+      const d = document.createElement('a'); d.href = url; d.download = name; document.body.appendChild(d); d.click(); d.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }catch(e){ window.location.href = ZIP; }
+    a.textContent = label;
+  }));
+})();
+</script>
 <script>
 // Fonte da marca e ajuste de altura na Cademí, reaproveitados do Laboratório UDI (mesmo repositório).
 (async function(){
