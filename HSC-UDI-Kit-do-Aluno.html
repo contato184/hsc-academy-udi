@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Kit do aluno UDI | HSC Academy</title>
+<style>
+:root{--bg:#f4f5fb;--card:#fff;--fg:#0a0e2a;--muted:#4b5470;--line:#d9def0;--brand:#011072;--accent:#4a6cf7;--soft:#F0F2FF}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'HSCBlauer',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5;padding:0 16px 32px}
+.wrap{max-width:980px;margin:0 auto}
+header{background:linear-gradient(160deg,#011072 0%,#050D3D 30%,#0A0E2A 60%,#030842 100%);color:#fff;border-radius:0 0 14px 14px;padding:22px 24px 20px;margin:0 -16px 22px;border-bottom:4px solid var(--accent)}
+header img{height:26px;display:block}
+header .acad{font-size:10px;letter-spacing:.32em;color:#C9D2FF;margin:6px 0 16px 2px}
+h1{margin:0 0 6px;font-size:clamp(22px,4.5vw,30px);line-height:1.15}
+header p{margin:0;color:#D6DCFF;max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:620px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px}
+.tag{align-self:flex-start;font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--brand);background:var(--soft);border-radius:999px;padding:3px 10px}
+.card h2{margin:2px 0 0;font-size:17px;color:var(--brand);line-height:1.25}
+.card p{margin:0;color:var(--muted);font-size:14px;flex:1}
+.btn{display:block;text-align:center;text-decoration:none;background:var(--brand);color:#fff;font-weight:700;padding:10px 12px;border-radius:8px}
+.btn:hover{background:var(--accent)}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.all{margin-top:16px;text-align:center}
+.all a{color:var(--brand);font-weight:700}
+.note{font-size:13px;color:var(--muted);border-top:1px solid var(--line);margin-top:22px;padding-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="https://workspace.hscglobalgroup.com/workspace/style-guide/assets/png/novo-logo-branco.png" alt="HSC Global">
+  <div class="acad">ACADEMY</div>
+  <h1>Kit do aluno | Curso UDI</h1>
+  <p>Materiais de apoio para consulta durante e depois do curso. Clique para baixar cada um.</p>
+</header>
+<div class="grid">
+  <div class="card"><span class="tag">PDF</span><h2>Guia de bolso UDI</h2><p>Resumo do curso em três páginas: conceitos, prazos da Anvisa, leitura do código, comparação Brasil, EUA e UE e glossário.</p><a class="btn" href="Guia_de_Bolso_UDI_HSC.pdf" target="_blank" rel="noopener">Abrir o guia</a></div>
+  <div class="card"><span class="tag">EXCEL</span><h2>Planilha de mapeamento UDI</h2><p>Inventário de produtos, prazos por classe, dado mestre para SIUD, GUDID e EUDAMED e plano de ação.</p><a class="btn" href="Planilha_Mapeamento_UDI_HSC.xlsx" download>Baixar a planilha</a></div>
+  <div class="card"><span class="tag">WORD</span><h2>Checklist de rotulagem UDI</h2><p>Itens para conferir no rótulo antes de liberar a arte: identificação, conteúdo do código, apresentação e dados nas bases.</p><a class="btn" href="Checklist_Rotulagem_UDI_HSC.docx" download>Baixar o checklist</a></div>
+  <div class="card"><span class="tag">WORD</span><h2>Modelo de procedimento UDI</h2><p>Estrutura de procedimento de UDI no sistema de gestão da qualidade, para estudo dos requisitos.</p><a class="btn" href="Modelo_Procedimento_UDI_SGQ_HSC.docx" download>Baixar o modelo</a></div>
+</div>
+<p class="all"><a href="Kit_UDI_HSC_Academy.zip" download>Baixar tudo de uma vez (.zip)</a></p>
+<p class="note">Material de estudo do curso UDI da HSC Academy. Confirme sempre os prazos e requisitos no texto oficial das normas.</p>
+</div>
+<script>
+// Fonte da marca e ajuste de altura na Cademí, reaproveitados do Laboratório UDI (mesmo repositório).
+(async function(){
+  try{
+    const html = await (await fetch('HSC-UDI-Laboratorio.html')).text();
+    for (const m of html.matchAll(/base64,([A-Za-z0-9+\/=]+)\) format\('woff2'\);font-weight:(\d+)/g)){
+      const bin = Uint8Array.from(atob(m[1]), c => c.charCodeAt(0));
+      const ff = new FontFace('HSCBlauer', bin, {weight: +m[2] < 601 ? '100 600' : '601 900'});
+      await ff.load(); document.fonts.add(ff);
+    }
+    const i = html.indexOf('iFrameResizerChild]Ready');
+    if (i > 0 && window.parent !== window){
+      const st = html.lastIndexOf('<script', i), en = html.indexOf('<\/script>', i);
+      const code = html.slice(html.indexOf('>', st) + 1, en);
+      const s = document.createElement('script'); s.textContent = code; document.body.appendChild(s);
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
