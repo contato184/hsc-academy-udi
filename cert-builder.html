@@ -1,0 +1,33 @@
+<!doctype html><meta charset="utf-8"><title>cert</title><body>
+<script>
+(async function(){
+const send=(m)=>parent.postMessage(m,'*');
+try{
+const html=await (await fetch('HSC-UDI-Laboratorio.html')).text();
+for(const m of html.matchAll(/base64,([A-Za-z0-9+\/=]+)\) format\('woff2'\);font-weight:(\d+)/g)){const bin=Uint8Array.from(atob(m[1]),c=>c.charCodeAt(0)); const ff=new FontFace('HSCBlauer',bin,{weight:+m[2]<601?'400':'800'}); await ff.load(); document.fonts.add(ff);}
+const bmp=await createImageBitmap(await (await fetch('https://upload.cademi.cloud/files/instancia_6474/jpg/EM9yKrDGkcIZDM3DNgKpT60oR7HzxY7D.jpeg')).blob());
+const W=bmp.width,H=bmp.height,S=W/1400; const cv=new OffscreenCanvas(W,H); const g=cv.getContext('2d'); g.drawImage(bmp,0,0);
+const id=g.getImageData(0,0,W,H), d=id.data; const R=(a,b,c,e)=>[Math.floor(a*S),Math.floor(b*S),Math.floor(c*S),Math.floor(e*S)];
+const reg={flags:R(0,0,22,990),mdsap:R(1140,65,1265,170),rtp:R(1100,745,1262,895),title:R(360,300,1040,380),lead:R(480,445,920,485),course:R(420,610,985,720),footer:R(230,918,1175,972)};
+const set=(x,y,r,gg,b)=>{const i=(y*W+x)*4; d[i]=r;d[i+1]=gg;d[i+2]=b;d[i+3]=255}; const get=(x,y)=>{const i=(y*W+x)*4; return [d[i],d[i+1],d[i+2]]};
+{const [x0,y0,x1,y1]=reg.flags; for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++)set(x,y,255,255,255);}
+for(const k of ['title','lead','course','footer']){const [x0,y0,x1,y1]=reg[k]; const mid=(y0+y1)>>1; for(let x=x0;x<x1;x++){const t=get(x,Math.max(y0-6,0)), b=get(x,Math.min(y1+6,H-1)); for(let y=y0;y<mid;y++)set(x,y,...t); for(let y=mid;y<y1;y++)set(x,y,...b);}}
+const inB=(x,y)=>['mdsap','rtp'].some(k=>{const [x0,y0,x1,y1]=reg[k]; return x>=x0&&x<x1&&y>=y0&&y<y1});
+const cx=1099.776*S, cy=437.382*S; const src=new Uint8ClampedArray(d);
+for(const k of ['mdsap','rtp']){const [x0,y0,x1,y1]=reg[k]; for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const dx=x-cx,dy=y-cy,rad=Math.hypot(dx,dy),an=Math.atan2(dy,dx); let done=false; for(let s=1;s<400&&!done;s++)for(const sg of [1,-1]){const t=an+sg*s*0.002; const sx=Math.min(W-1,Math.max(0,Math.round(cx+rad*Math.cos(t)))), sy=Math.min(H-1,Math.max(0,Math.round(cy+rad*Math.sin(t)))); if(!inB(sx,sy)){const i=(sy*W+sx)*4; set(x,y,src[i],src[i+1],src[i+2]); done=true; break;}}}}
+g.putImageData(id,0,0);
+g.textBaseline='top'; const cxT=700*S;
+const ctr=(y,t,w,sz,col)=>{g.font=w+' '+Math.round(sz*S)+'px HSCBlauer'; g.fillStyle=col; const m=g.measureText(t).width; g.fillText(t,cxT-m/2,y*S);};
+ctr(312,'Certificado de Conclusão',800,46,'#111111');
+ctr(452,'Certificamos que',400,16,'#5A5E68');
+ctr(615,'UDI: Identificação Única de Dispositivos Médicos',800,28,'#111111');
+ctr(655,'RDC 591/2021 e GS1',800,19,'#111111');
+ctr(688,'Carga horária: 8 horas',400,18,'#011072');
+ctr(931,'HSC Global Academy  |  hscglobalgroup.com',400,12.5,'#011072');
+ctr(948,'Este certificado é de propriedade da HSC Global. Av. Brigadeiro Faria Lima, 1811, Cj 115 - Jardim Paulistano - São Paulo/SP - CEP 01452-001',400,11,'#5A5E68');
+const blob=await cv.convertToBlob({type:'image/jpeg',quality:0.86});
+send({type:'hsc-cert',blob});
+}catch(e){send({type:'hsc-cert-err',msg:String(e)});}
+})();
+</script>
+</body>
